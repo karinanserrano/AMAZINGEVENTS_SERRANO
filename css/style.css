@@ -4,8 +4,28 @@
     box-sizing: border-box;
     font-family: Barlow, sans-serif;
 }
+html, body{
+    height: 100%;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+}
 section{
     text-align: center;
+}
+.titulo section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 10em;
+    align-items: center;
 }
 img{
     max-width: 100%;
@@ -31,13 +51,18 @@ header nav{
     display: flex;
     flex-direction: column;
 }
+.card-detalle{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
 .category{
     display: flex;
     flex-direction: row;
 }
 .cards{
-    margin-top: 1em;
-    gap: 103px;
+    gap: 10px;
 }
 .marginDetail{
     margin:10%;
@@ -58,7 +83,7 @@ footer{
     margin-left: 2%;
 }
 .redes img{
-    width: 25%;
+    width: 15%;
 }
 .detalles{
     display: flex;
@@ -107,5 +132,7 @@ table{
     .detalles{
         flex-direction: row;
     }
-    
+    main{
+        flex-direction: column;
+    }  
 }
