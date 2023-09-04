@@ -194,11 +194,23 @@ const data = {
         },
     ],
 };
+console.log([document])
 
+function mostrarCards(arr, contenedor) {
+    console.log(arr)
+    if (arr.length == 0) {
+        contenedor.innerHTML = `<h3>No se encontraron eventos con esas caracteristicas</h3>`
+        return
+    }
+    let cardi = ""
+    arr.forEach(element => {
+        cardi += crearCards(element)
+    });
+    contenedor.innerHTML = cardi;
 
-function crearCards(eventos,contenedor) {
-    for (const evento of eventos) {
-        let cardi = `<div class="col-12 col-sm-6 col-md-4 col-xl-3">
+}
+function crearCards(evento) {
+    return `<div class="col-12 col-sm-6 col-md-4 col-xl-3">
        <div class="card">
         <img src="${evento.image}" class="card-img-top" alt="${evento.name}">
         <div class="card-body">
@@ -206,15 +218,80 @@ function crearCards(eventos,contenedor) {
             <p class="card-text">${evento.description}</p>
             <div class="card-detalle">
                 <p class="card-text">Price: $${evento.price}</p>
-                <a class="btn btn-primary" href="./details.html" role="button">Details</a>
+                <a class="btn btn-primary" href="./details.html?id=${evento._id}" role="button">Details</a>
             </div>
         </div>
         </div>
     </div>`;
-    document.getElementById(contenedor).innerHTML += cardi;
-    }
 }
 
+function mostrarChecks(arr, contenedor) {
+    let checki = ''
+    arr.forEach(el => {
+        checki += crearChecks(el)
+    });
+    contenedor.innerHTML = checki
+};
+function crearChecks(category) {
+    console.log(category)
+    return `<div class="form-check">
+            <input class="form-check-input" type="checkbox" name="categoria" value="${category}" id="cat">
+            <label class="form-check-label" for="flexCheckDefault">
+            ${category}
+            </label>
+          </div>`
 
+}
+function filtrarXCate(arr) {
+    let ar = arr.map(el => el.category).filter((categoria, indice, categorias) => categorias.indexOf(categoria) === indice)
+    return ar;
+}
 
+function categoriasFiltadas(arr) {
+    let checkboxes = Array.from(document.getElementsByClassName("form-check-input"))
+    let checks = checkboxes.filter(check => check.checked)
+    let valores = checks.map(ch => ch.value)
+    if (valores.length == 0) {
+        return arr
+    }
+    let arregloFiltrado = arr.filter(evento => valores.includes(evento.category))
+    return arregloFiltrado
+}
 
+function buscarXTexto(arr, texto) {
+    let arregloFiltrado = arr.filter(el => el.name.toLowerCase().includes(texto.trim().toLowerCase()) || el.description.toLowerCase().includes(texto.trim().toLowerCase()))
+    return arregloFiltrado;
+}
+
+function filtro(eventos) {
+    let filtro1 = categoriasFiltadas(eventos)
+    let filtro2 = buscarXTexto(filtro1, buscador.value)
+    mostrarCards(filtro2, contenedor)
+}
+
+function crearCardDetalle(evento) {
+    return `<div class="imagen">
+    <img src="${evento.image}" alt="Prueba evento">
+    </div>
+    <div class="detalle">
+    <div>
+        <p>Description :${evento.description}</p>
+    </div>
+    <div>
+    <p>name: ${evento.name}</p>
+   </div>
+   <div>
+    <p>date: ${evento.date}</p>
+   </div>
+   <div>
+    <p>Category: ${evento.category}</p>
+   </div>
+  
+</div> `
+}
+
+function mostrarCardDetalles(evento, contenedor) {
+    
+    let deta = crearCardDetalle(evento);
+    contenedor.innerHTML = deta;
+}
