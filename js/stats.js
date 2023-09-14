@@ -16,8 +16,8 @@ function cargarTabla(eventos, data) {
     let ordenarXHi = ordenarXPorcHigh(eventos);
     let ordenarXLo = ordenarXPorcLow(eventos);
     let ordXCapa = ordenarXCapacity(eventosOrde);
-    let reveUp = revenues(eventosUp);
-    agruparXCategorias(eventos)
+    let reveUp = mapear(eventosUp);
+    console.log(reveUp)
     // let revePast = revenues(eventosPast);
     mostrarHTML(ordenarXHi, ordenarXLo, ordXCapa, contenedorStat);
     mostrarHTMLxCate(reveUp, reveUp, reveUp, contenedorUp)
@@ -25,11 +25,49 @@ function cargarTabla(eventos, data) {
 }
 
 function revenues(eventos) {
-    let ganancias = 0;
-    eventos.forEach(evento => ganancias = evento.capacity * evento.price);
-
-    return Math.round()
+    //calcular recibe el nombre y el porcentaje
+    let arrayDeCategorias = []
+    eventos.forEach((evento) => {
+        let categoria = evento.category;
+        let precio = evento.price;
+        if (!arrayDeCategorias[categoria]) {
+            arrayDeCategorias[categoria] = 0
+        }
+        arrayDeCategorias[categoria] += precio;
+    });
+    console.log(arrayDeCategorias);
+    return eventos;
 }
+
+
+function mapear(eventos){
+    let r =revenues(eventos);
+    console.log(r)
+    let cal =calcular(eventos);
+    console.log(cal)
+    let map = eventos.map(evento => {
+        if (cal.assistance != null) {
+            console.log("if")
+            return {
+                name: r,
+                revenues: (cal.assistance * r.value),
+                category: cal.category,
+                porcentaje: (cal.assistance / cal.capacity) * 100
+            };
+        } else {
+            console.log("else")
+            return {
+                name: r,
+                revenues: (cal.estimate * r.value),
+                category: cal.category,
+                porcentaje: (cal.estimate / evento.capacity) * 100
+            }
+        }
+    });
+    console.log("nada")
+    return map;
+}
+
 
 function mostrarHTMLxCate(col1, col2, col3, contenedor) {
     console.log(col1, col2, col3, contenedor)
@@ -37,12 +75,12 @@ function mostrarHTMLxCate(col1, col2, col3, contenedor) {
     let tbodyHTML = "";
     for (let i = 0; i < 3; i++) {
         let columna1 = col1[i];
-        let columna2 = col2[i];
-        let columna3 = col3[i];
+        let columna2 = col1[i];
+        let columna3 = col1[i];
         tbodyHTML += `<tr>
-        <td>${columna1.name} </td>
-        <td>${columna2.name}</td>
-        <td>${columna3.name}</td>
+        <td>${columna1} </td>
+        <td>${columna2}</td>
+        <td>${columna3}</td>
     </tr>`
     };
     contenedor.innerHTML = tbodyHTML;
@@ -98,11 +136,15 @@ function calcular(eventos) {
             if (evento.assistance != null) {
                 return {
                     name: evento.name,
+                    revenues: (evento.assistance * evento.price),
+                    category: evento.category,
                     porcentaje: (evento.assistance / evento.capacity) * 100
                 };
             } else {
                 return {
                     name: evento.name,
+                    revenues: (evento.estimate * evento.price),
+                    category: evento.category,
                     porcentaje: (evento.estimate / evento.capacity) * 100
                 }
             }
@@ -112,53 +154,4 @@ function calcular(eventos) {
         console.log(error);
     }
 }
-
-function agruparXCategorias(eventos) {
-    arrCategorias = filtrarXCate(eventos);
-    console.log(arrCategorias)
-    let newArrCategorias = [];
-    for (var i = 0; i < newArrCategorias.length; i++) {
-        newArrCategorias[i] = [];
-    }
-    /* arrCategorias.forEach(cat => {
-        const nuevoArray = [cat]; // Crea un nuevo array con el nombre como primer elemento
-        newArrCategorias.push(nuevoArray); // Agrega el nuevo array al arreglo de resultados
-    }); */
-    console.log(newArrCategorias)
-    llenarArrayCategorias(eventos, arrCategorias, newArrCategorias);
-    /*let agrupar = newArrCategorias.map(evento => {
-        if (evento.assistance != null) {
-            return {
-                name: evento.name,
-                porcentaje: (evento.assistance / evento.capacity) * 100
-            };
-        } else {
-            return {
-                name: evento.name,
-                porcentaje: (evento.estimate / evento.capacity) * 100
-            }
-        }
-    });
-    return calcularPorcentaje;  */
-
-
-}
-
-function llenarArrayCategorias(original, categorias, vacio) {
-    console.log(original, categorias, vacio)
-
-    for (const evento of original) {
-        for (const categoria of categorias) {
-            if (evento.category == categoria) {
-                vacio.push(evento);
-            }
-
-        }
-    }
-
-    console.log(vacio)
-}
-
-
-
 
